@@ -1,0 +1,5 @@
+from enum import Enum
+
+GAME_NAME = "UNTITLED RANDOM NUMBER GENERATOR"
+NEW_LINE = "\n"
+NEW_LINE_COMMA = ",\n"
