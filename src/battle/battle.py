@@ -1,8 +1,7 @@
-import character
-from character import Character
+import character.character as character
+from character.character import Character
 import constants as c
-import dice as d
-from enum import Enum
+import dice.dice as d
 import fancy_print as fp
 from player import Player
 from enemy import Enemy
@@ -23,25 +22,29 @@ class Battle:
         turns = self.turn_order()
         fp.Fancy_Print(f"\nRound {self.round}:\n\n {c.NEW_LINE_COMMA.join([x.char_hp() for x in turns])}.")
         for cur_turn_creature in turns:
-            roll = cur_turn_creature.roll()
+            result = cur_turn_creature.roll()
             # CHECK FOR CONFUSION
             # APPLY FAVORABLY OR NOT
-            self.print_roll(roll)
-            self.apply(roll)
+            self.print_roll(result)
+            self.apply(
+                target_rule=Target_Rule.HEAL_PLAYER_DAMAGE_ENEMY,
+                results=result)
             self.tidy_battlefield()
     
-    def battle(self) -> bool:
+    def run(self) -> character.Status:
         while not self.battle_ended:
             self.step()
         return self.player.status()
 
-    def print_roll(self, roll: list[d.Result]):
-        for r in roll:
-            print(f"{r.val} {d.effect_text[r.effect_type]}")
+    def print_roll(self, results: list[d.Result]):
+        for result in results:
+            print(f"{result.val} {d.effect_text[result.effect_type]}")
 
-    def apply(self, target_rule: Target_Rule, roll: list[d.Result]):
-        for r in roll:
-            self.apply_one(r)
+    def apply(self, target_rule: Target_Rule, results: list[d.Result]):
+        for result in results:
+            self.apply_one(
+                target_rule=target_rule,
+                result=result)
             self.tidy_battlefield()
     
     def apply_one(self, target_rule: Target_Rule, result: d.Result):
@@ -68,5 +71,8 @@ class Battle:
             self.battle_ended = True        
 
     def turn_order(self) -> list[Character]:
-        all = [self.player] + self.enemies
-        return sorted(all, key=lambda x: x.speed, reverse=True)
+        all_characters = [self.player] + self.enemies
+        return sorted(
+            all_characters,
+            key=lambda x: x.speed,
+            reverse=True)
