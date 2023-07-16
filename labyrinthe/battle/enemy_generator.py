@@ -1,7 +1,7 @@
 import random
-import enemy_types
-from enemy_types import Rank
-from enemy import Enemy
+from character import enemy_types
+from character.enemy_types import Rank
+from character.enemy import Enemy
 from dice.dice import Dice
 from dice.dice import Effect
 
@@ -11,13 +11,13 @@ base_dice = {
             Dice(
             description="d6 Damage Dice: Attacks for value rolled.",
             effect_type=Effect.DAMAGE,
-            sides=range(1,6+1)
+            sides=list(range(1,6+1))
             ),
             Dice(
             description="d3 Sword/Shield Dice: Attack and Block " +
             "for value rolled.",
             effect_type=Effect.SWORD_SHIELD,
-            sides=range(0,3+1)
+            sides=list(range(0,3+1))
             )
         ],
     Rank.SUPPORT:
@@ -26,13 +26,13 @@ base_dice = {
             description="d3 Damage Dice: A standard d3. Warning: " + 
             "Don't try to visualize in three dimensions.",
             effect_type=Effect.DAMAGE,
-            sides=range(1,3+1)
+            sides=list(range(1,3+1))
             ),
             Dice(
             description="d4 Healing Dice: Heal front-most damaged " +
             "ally for value rolled.",
             effect_type=Effect.HEALING,
-            sides=range(1,4+1)
+            sides=list(range(1,4+1))
             )
         ],
     Rank.CASTER:
@@ -41,7 +41,7 @@ base_dice = {
             description="d4 Ranged Damage Dice: Attacks rear-most " +
             "enemy for value rolled.",
             effect_type=Effect.RANGED_DAMAGE,
-            sides=range(1,4+1)
+            sides=list(range(1,4+1))
             ),
             Dice(
             description="AOE Damage Dice: Damages all enemies for " +

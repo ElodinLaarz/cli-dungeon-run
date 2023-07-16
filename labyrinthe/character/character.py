@@ -1,5 +1,7 @@
 from enum import Enum
-import dice.dice as dice
+
+from dice import dice
+from dice.bag import DiceBag
 
 DEFAULT_HEALTH = 10
 DEFAULT_NAME = "unnamed"
@@ -28,7 +30,7 @@ class Status(Enum):
 class Character:
     def __init__(
         self,
-        dice_bag: dice.DiceBag = dice.DiceBag([dice.Dice()]),
+        dice_bag: DiceBag = DiceBag([dice.Dice()]),
         name: str = DEFAULT_NAME,
         attributes:
             Attributes = Attributes(
@@ -64,16 +66,6 @@ class Character:
     def poison(self, val: int) -> Status:
         self.poison_val += val
         return self.status()
-
-    def apply(self, result: dice.Result) -> Status:
-        dt = result.effect_type
-        if dt == dice.Effect.DAMAGE:
-            return self.damage(result.val)
-        elif dt == dice.Effect.HEALING:
-            return self.healing(result.val)
-        elif dt == dice.Effect.POISON:
-            return self.poison(result.val)
-        print(f"Uh Oh... Unexpected damage type {dt}.")
 
     def roll(self) -> list[dice.Result]:
         return self.dice_bag.roll()

@@ -1,8 +1,8 @@
-from player_classes import PlayerClass
-import character.character as character
+from character import character
 from character.character import Character
+from character.player_classes import PlayerClass
 from dice.dice import Dice
-from dice.dice import DiceBag
+from dice.bag import DiceBag
 
 class Player(Character):
     def __init__(
@@ -16,6 +16,12 @@ class Player(Character):
             attributes=attributes,
             alliance=character.Alliance.FRIENDLY
         )
+        self.gold = 100
 
     def set_class(self, player_class: PlayerClass):
         self.attributes = player_class.attributes
+
+    def char_stats(self) -> str:
+        stats = super().char_stats()
+        stats += "\n" + f"Current Gold: {self.gold}"
+        return stats

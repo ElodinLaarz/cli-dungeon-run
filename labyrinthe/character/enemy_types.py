@@ -19,6 +19,7 @@ class Rank(Enum):
     VANGUARD = 1
     SUPPORT = 2
     CASTER = 3
+    ALL = 4
 
 # What does a creature type do?
 # e.g. Trolls have 'fewer-sided' dice

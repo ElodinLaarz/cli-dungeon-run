@@ -12,8 +12,14 @@ class Effect(Enum):
     RANGED_DAMAGE = 5
     AOE = 6
 
-effect_text = {Effect.DAMAGE: "DAMAGE", Effect.HEALING: "HEALING",
-               Effect.POISON: "POISON"}
+effect_text = {
+    Effect.DAMAGE: "Attack",
+    Effect.HEALING: "Heal",
+    Effect.POISON: "Poison",
+    Effect.SWORD_SHIELD: "Attack and Block",
+    Effect.RANGED_DAMAGE: "Ranged Attack",
+    Effect.AOE: "AOE"
+}
 
 class Result:
     def __init__(self, val: int, effect_type: Effect = Effect.DAMAGE):
@@ -25,8 +31,8 @@ class Dice:
         self,
         description: str = "A standard d6.",
         effect_type: Effect = Effect.DAMAGE,
-        sides : list[int] = range(DEFAULT_DICE_MIN,
-                                  DEFAULT_DICE_MAX+1)
+        sides : list[int] = list(range(DEFAULT_DICE_MIN,
+                                  DEFAULT_DICE_MAX+1))
         ):
         self.sides = sides
         self.effect_type = effect_type
@@ -49,28 +55,6 @@ class Dice:
                 return False
         return True
 
-    def rescale(self, scaling_factor: int):
+    def rescale(self, scaling_factor: float):
         for index, side in enumerate(self.sides):
             self.sides[index] = int(side*scaling_factor)
-
-class DiceBag:
-    def __init__(
-        self,
-        dice: list[Dice] = None):
-        self.dice = dice
-
-    def roll(self) -> list[Result]:
-        return [die.roll() for die in self.dice]
-
-    def show_dice(self):
-        print(f"Currently, your bag has {len(self.dice)} dice in it!")
-        for i, die in enumerate(self.dice):
-            print(f"Dice #{i+1}:")
-            die.explain()
-
-class EnemyDiceBag(DiceBag):
-    def show_dice(self):
-        print(f"The selected Creature's Dice Bag has {len(self.dice)} dice in it.")
-        for i, die in enumerate(self.dice):
-            print(f"Dice #{i+1}:")
-            die.explain()
