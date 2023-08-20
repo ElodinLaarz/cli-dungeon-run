@@ -5,8 +5,11 @@ from character.enemy import Enemy
 from dice.dice import Dice
 from dice.dice import Effect
 
+# NOTE: Somthing fishy going on with the generator... A floor-1 Goblin
+# dealth 8 damage to me :(
+
 base_dice = {
-    Rank.VANGUARD: 
+    Rank.VANGUARD:
         [
             Dice(
             description="d6 Damage Dice: Attacks for value rolled.",
@@ -73,7 +76,7 @@ def fair_num_dice_to_roll(floor_number: int) -> int:
 
 def fair_dice(floor_number: int, rank: Rank) -> Dice:
     example_fair_dice_by_zone = random.choice(base_dice[rank])
-    example_fair_dice_by_zone.rescale(1+0.2*floor_number)
+    example_fair_dice_by_zone.rescale(1+0.2*(floor_number-1))
     return example_fair_dice_by_zone
 
 def fair_enemy(floor_number: int, rank: Rank) -> Enemy:

@@ -20,8 +20,15 @@ class Player(Character):
 
     def set_class(self, player_class: PlayerClass):
         self.attributes = player_class.attributes
+        self.current_hp = player_class.attributes.max_hp
 
     def char_stats(self) -> str:
         stats = super().char_stats()
         stats += "\n" + f"Current Gold: {self.gold}"
         return stats
+
+    def dice_string(self) -> str:
+        printed_dice = f"The dice of {self.name}:"
+        for index, dice in enumerate(self.dice_bag.dice):
+            printed_dice += f"\nDice {index+1}: {dice.description}"
+        return printed_dice

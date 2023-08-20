@@ -14,7 +14,6 @@ class Attributes:
         max_hp: int = DEFAULT_HEALTH,
         speed: int = DEFAULT_SPEED,
         toughness: int = DEFAULT_TOUGHNESS):
-        self.current_hp = max_hp
         self.max_hp = max_hp
         self.toughness = toughness
         self.speed = speed
@@ -39,6 +38,7 @@ class Character:
                 speed=DEFAULT_SPEED),
         alliance: Alliance = Alliance.ENEMY):
         self.name = name
+        self.current_hp = attributes.max_hp
         self.attributes = attributes
         self.dice_bag = dice_bag
         self.alliance = alliance
@@ -51,16 +51,16 @@ class Character:
         return self.status()
 
     def is_alive(self) -> bool:
-        return self.attributes.current_hp > 0
+        return self.current_hp > 0
 
     def damage(self, val: int) -> Status:
-        self.attributes.current_hp -= val
+        self.current_hp -= val
         return self.status()
 
     def healing(self, val: int) -> Status:
-        self.attributes.current_hp = min(
+        self.current_hp = min(
             self.attributes.max_hp,
-            self.attributes.current_hp+val)
+            self.current_hp+val)
         return self.status()
 
     def poison(self, val: int) -> Status:
@@ -76,10 +76,10 @@ class Character:
         return Status.IS_DEAD
 
     def char_hp(self) -> str:
-        return f"{self.name}: HP {self.attributes.current_hp} / {self.attributes.max_hp}"
+        return f"{self.name}: HP {self.current_hp} / {self.attributes.max_hp}"
 
     def char_stats(self) -> str:
         return f"""{self.name}:
-HP {self.attributes.current_hp} / {self.attributes.max_hp}
+HP {self.current_hp} / {self.attributes.max_hp}
 Toughness {self.attributes.toughness} (Relates to defense and HP regen)
 Speed {self.attributes.speed} (Determines turn order and dodge chance)"""

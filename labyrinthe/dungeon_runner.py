@@ -10,12 +10,14 @@ import fancy_print as fp
 
 FIGHT = "Fight"
 HEAL = "HEAL to full (10G)"
+HEALING_COST = 10
+STATS = "Show your Character's Current Status"
 
 in_between_round_choices = [
     HEAL,
     "Check Mercenaries",
     FIGHT,
-    "Show your Character's Current Status"
+    STATS
 ]
 
 class DungeonRun:
@@ -42,6 +44,8 @@ class DungeonRun:
             choice_index = choices.get_choice(in_between_round_choices)
             choice = in_between_round_choices[choice_index]
             if choice == FIGHT:
+                enemies = []
+                battle = None
                 enemies = enemy_generator.Enemy_Generator(self.floor)
                 battle = Battle(self.player, enemies=enemies)
                 if battle.run() != character.Status.IS_DEAD:
@@ -49,30 +53,39 @@ class DungeonRun:
                     self.floor += 1
                     new_floor = True
                 else:
-                    print("Oh no! You died.")
-                    print(f"You made it to floor {self.floor}.")
+                    fp.Fancy_Print("Oh no! You died.\n" +
+                          f"You made it to floor {self.floor}.")
             elif choice == HEAL:
                 if self.player.gold < 10:
-                    print("Whoops... Looks like your pockets are " +
-                          "a little light there. Come back when " +
-                          "you have some more gold, alright?")
+                    fp.Fancy_Print("Whoops... Looks like your " +
+                          "pockets are a little light there. Come " +
+                          "back when you have some more gold, " +
+                          "alright?")
                     continue
-                cur_hp = self.player.attributes.current_hp
-                max_hp = self.player.attributes.current_hp
+                cur_hp = self.player.current_hp
+                max_hp = self.player.attributes.max_hp
                 if cur_hp >= max_hp:
-                    print("On second thought, you realize you are " +
+                    fp.Fancy_Print("On second thought, you realize you are " +
                           "feeling healthy enough already...\n" +
                           f"Current HP: {cur_hp}, Max HP: {max_hp}")
-                
+                    continue
+                fp.Fancy_Print("You take a rest...")
+                self.player.gold -= HEALING_COST
+                self.player.healing(self.player.attributes.max_hp)
+                fp.Fancy_Print(self.player.char_stats())
+            elif choice == STATS:
+                fp.Fancy_Print(self.player.char_stats())
+                fp.Fancy_Print(self.player.dice_string())
+                time.sleep(1)
 
     def opening(self):
         fp.Fancy_Print(
             f"Welcome to {c.GAME_NAME}, {self.player.name}!")
-        print("Choose a class!")
+        fp.Fancy_Print("Choose a class!")
         chosen_index = choices.get_choice(
             [x.name for x in pc.Player_Classes])
         chosen_class = pc.Player_Classes[chosen_index]
-        print(f"You have chosen {chosen_class.name}!")
+        fp.Fancy_Print(f"You have chosen {chosen_class.name}!")
         self.player.set_class(chosen_class)
         fp.Fancy_Print(
             "You will start with the following stats:\n\n" + 

@@ -95,9 +95,11 @@ def creatures_by_floor(floor_number: int,
         desired rank.
     """
     if floor_number <= 3:
-        creatures = [enemy_types["Goblin Soldier"]]
+        creatures = [
+            enemy_types["Goblin Soldier"],
+            enemy_types["Troll Shaman"],]
     elif 3 < floor_number <= 7:
-        creatures = [enemy_types["Troll Shaman"],
+        creatures = [
                 enemy_types["Elemental Mage"]]
     else:
         creatures = [enemy_types["Dragon"]]

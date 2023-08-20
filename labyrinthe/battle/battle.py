@@ -25,14 +25,19 @@ class Battle:
         self.round = 0
         self.battle_ended = False
 
+    def clean_up(self):
+        self.enemies = None
+        self.round = 0
+        self.battle_ended = False
+
     def step(self):
         self.round += 1
         turns = self.turn_order()
-        print(",\n".join(
+        cur_statuses = ",\n".join(
             [x.char_hp() + f" (Speed: {x.attributes.speed})"
-             for x in turns]))
+             for x in turns])
         fp.Fancy_Print(f"\nRound {self.round}:\n\n" +
-        f"{[x.char_hp() for x in turns]}.")
+        f"{cur_statuses}.")
         for cur_turn_creature in turns:
             if self.battle_ended:
                 return
@@ -54,6 +59,7 @@ class Battle:
     def run(self) -> Status:
         while not self.battle_ended:
             self.step()
+        self.clean_up()
         return self.player.status()
 
     def print_roll(self, results: list[dice.Result]):
@@ -102,9 +108,9 @@ class Battle:
                   f"{heal_result.effect_type}, {heal_result.val}")
         heal_value = heal_result.val
         for enemy in self.enemies:
-            if enemy.attributes.current_hp < enemy.attributes.max_hp:
-                enemy.attributes.current_hp = min(
-                    enemy.attributes.current_hp + heal_value,
+            if enemy.current_hp < enemy.attributes.max_hp:
+                enemy.current_hp = min(
+                    enemy.current_hp + heal_value,
                     enemy.attributes.max_hp
                 )
                 return
